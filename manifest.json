@@ -10,6 +10,12 @@
       "src": "Faceless Boiled Egg in Morning Style.png",
       "sizes": "192x192 512x512",
       "type": "image/png"
+    },
+
+    {
+      "src": "Faceless Boiled Egg in Morning Style.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
 }
