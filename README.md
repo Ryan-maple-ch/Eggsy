@@ -1,0 +1,1 @@
+There are two buttons which will give you the perfect time to do both eggs. Meanwhile, there will be a sound played once the egg is ready. You can go to the demo version of this tool to see how it works.
