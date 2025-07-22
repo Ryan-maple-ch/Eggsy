@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>EGGsy</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="egg-icon.png">
+    <meta name="theme-color" content="#f8f1c4" />
+    <link rel="icon" href="egg-icon.png" />
+    <style>
+        body {
+            background: #f8f1c4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .egg-button {
+            background-color: #ffda77;
+            border: none;
+            border-radius: 15px;
+            padding: 15px 30px;
+            font-size: 20px;
+            margin: 10px 15px;
+            cursor: pointer;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 1);
+            transition: transform 0.1s ease;
+        }
+        .egg-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }  
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .egg-button:hover {
+            transform: scale(1.1);
+            background-color: #ffe599;
+        }
+    </style>
+</head>
+<body>
+<h1 id="title">Morning & Welcome to Eggsy! 今天想吃什麼熟度的水煮蛋呢🥚🍳?</h1>
+<h2 id="timer">00:00</h2>
+<div class="egg-container">
+    <img id="egg-image" src="Multiple Boiled Eggs Breakfast Plate.png" width="300"/>
+    <div class="button-container">
+        <button class="egg-button" onclick="changetitle('soft')">半熟蛋</button>
+        <button class="egg-button" onclick="changetitle('hard')">全熟蛋</button>
+    </div>
+</div>
+
+
+    <script>
+    let donesound;
+    document.body.addEventListener('click', () => {
+        donesound= new Audio('done-sound.mp3');
+        donesound.play().then(() => {
+            donesound.pause();
+            donesound.currentTime = 0;
+        })
+        .catch(() => {});
+    }, {once:true});
+    let countdownInterval = null;
+    function requestNotificationPermission() {
+        if ('Notification' in window && Notification.permission ==="default") {
+            Notification.requestPermission().then(permission => {
+                console.log('通知權限', permission);
+            });
+        }
+    }
+    
+    function sendNotification() {
+        if ('Notification' in window && Notification.permission=== 'granted') {
+            new Notification('蛋好了!', {
+                body:'🍽️ 完成啦！快把蛋撈起來吧！',
+                icon:'egg-icon.png'
+            });
+        }
+    }
+    
+    function changetitle(type) {
+        let duration = 0;
+        if (type==='soft') {
+            document.getElementById('title').innerText='正在煮半熟蛋中...';
+            document.getElementById('egg-image').src='Shell-less Egg with Flowing Yolk.png';
+            duration = 480; }
+            else if (type==='hard') {
+            document.getElementById('title').innerText='正在煮全熟蛋中...';
+            document.getElementById('egg-image').src='Hard-Boiled Egg with 3_1 Pepper to Salt Ratio.png';
+            duration = 600; }
+        
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+        }
+
+        updatetimer(duration) //變成h2 00:00的格式
+
+        requestNotificationPermission();
+
+        countdownInterval= setInterval(() => {
+            duration--;
+            updatetimer(duration);
+
+            if (duration <= 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('title').innerText='🍽️ 完成啦！快把蛋撈起來吧！';
+                if (donesound) {
+                    donesound.pause();
+                    donesound.currentTime = 0;
+                    donesound.play().catch(() => {});
+                }
+                if (navigator.vibrate) {
+                    navigator.vibrate([200, 100, 200]);
+                }
+                
+                sendNotification(); 
+            }
+        }, 1000);
+    }
+    function updatetimer(seconds) {
+        const minutes = String(Math.floor(seconds/60)).padStart(2, '0');
+        const secs = String(Math.floor(seconds%60)).padStart(2, '0');
+        document.getElementById('timer').innerText = `${minutes}:${secs}`;
+    }
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+
+    
+    </script>
+</body>
+</html>

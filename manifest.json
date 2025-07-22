@@ -1,0 +1,21 @@
+{
+  "name": "Eggsy",
+  "short_name": "Eggsy",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fffbe0",
+  "theme_color": "#fffbe0",
+  "icons":  [
+    {
+      "src": "egg-icon192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+
+    {
+      "src": "egg-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
